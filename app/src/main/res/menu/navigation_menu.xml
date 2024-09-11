@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+<item  android:id="@+id/weather"  android:icon="@drawable/weather_icon" android:checked="true"
+    android:title="آب و هوا" />
+    <item  android:id="@+id/prayerTime" android:icon="@drawable/prayer_time_icon"
+        android:title="اوقات شرعی"/>
+</menu>

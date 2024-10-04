@@ -10,6 +10,13 @@ material = "1.12.0"
 activity = "1.9.1"
 constraintlayout = "2.1.4"
 picasso = "2.8"
+retrofit = "2.9.0"
+gson = "2.11.0"
+converter-gson = "2.9.0"
+logging-interceptor = "4.9.0"
+lifecycle-livedata = "2.8.6"
+lifecycle-viewmodel = "2.8.6"
+play-services-location = "21.3.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -21,6 +28,13 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 picasso = { group = "com.squareup.picasso", name = "picasso", version.ref = "picasso" }
+retrofit = {group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit"}
+gson = {group = "com.google.code.gson", name = "gson", version.ref = "gson"}
+gson-converter = {group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "converter-gson"}
+loggin-interceptor = {group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "logging-interceptor"}
+lifecycle-livedata = {group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycle-livedata"}
+lifecycle-viewmodel = {group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle-viewmodel"}
+play-services-location = {group = "com.google.android.gms", name = "play-services-location", version.ref = "play-services-location"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

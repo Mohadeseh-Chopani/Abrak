@@ -1,4 +1,5 @@
 import com.android.manifmerger.ManifestSystemProperty
+import org.gradle.api.internal.DocumentationRegistry.BASE_URL
 
 plugins {
     alias(libs.plugins.android.application)
@@ -45,6 +46,13 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.picasso)
+    implementation(libs.retrofit)
+    implementation(libs.gson.converter)
+    implementation(libs.gson)
+    implementation(libs.loggin.interceptor)
+    implementation(libs.lifecycle.livedata)
+    implementation(libs.lifecycle.viewmodel)
+    implementation(libs.play.services.location)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

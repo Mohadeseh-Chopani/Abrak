@@ -7,11 +7,19 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.abrak.Api.ApiServiceProvider
+import com.example.abrak.Data.CurrentWeatherData
+import com.example.abrak.Data.ForecastWeatherData
+import com.example.abrak.Data.WeatherData
 import com.example.abrak.R
+import com.squareup.picasso.Picasso
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
-class ForecastAdapter(listData: List<String>) : RecyclerView.Adapter<ForecastAdapter.ForecastViewHolder>() {
+class ForecastAdapter(listData: List<WeatherData>) : RecyclerView.Adapter<ForecastAdapter.ForecastViewHolder>() {
 
-    var list: List<String> = listData
+    var list: List<WeatherData> = listData
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ForecastViewHolder {
         return ForecastViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.card_item, parent, false))
@@ -26,15 +34,24 @@ class ForecastAdapter(listData: List<String>) : RecyclerView.Adapter<ForecastAda
         return list.size
     }
 
-    class ForecastViewHolder(itemView: View) :RecyclerView.ViewHolder(itemView) {
-        var timeTxt:TextView = itemView.findViewById(R.id.time_forecast)
-        var airGrade:TextView = itemView.findViewById(R.id.air_grade_forecast)
-        var img:ImageView = itemView.findViewById(R.id.img_forecast)
-        var windSpeed:TextView = itemView.findViewById(R.id.wind_speed_forecast)
+    class ForecastViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var timeTxt: TextView = itemView.findViewById(R.id.time_forecast)
+        var airGrade: TextView = itemView.findViewById(R.id.air_grade_forecast)
+        var img: ImageView = itemView.findViewById(R.id.img_forecast)
+        var windSpeed: TextView = itemView.findViewById(R.id.wind_speed_forecast)
 
-
-        fun bind(item:String) {
-            timeTxt.setText(item)
+        fun bind(items: WeatherData) {
+            val date: List<String> = items.dt_txt.toString().split(" ")
+            timeTxt.setText(date.get(1))
+            val temperature: Int = items.main.temp.toInt()
+            airGrade.setText(temperature.toString() + " C°")
+            Picasso.get()
+                .load(
+                    ApiServiceProvider.BASE_URL + "?token=" + ApiServiceProvider.API_KEY + "&action=icon&id=" +
+                            items.weather.get(0).icon
+                )
+                .into(img)
+            windSpeed.setText(items.wind.speed.toString() + "Km/H")
         }
     }
 }

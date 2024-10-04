@@ -1,17 +1,19 @@
-package com.example.abrak
+package com.example.abrak.View
 
+import android.Manifest
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
-import android.os.Build.VERSION
 import android.os.Bundle
 import android.os.Handler
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.abrak.R
@@ -41,7 +43,6 @@ class SplashActivity : AppCompatActivity() {
         val anim = ObjectAnimator.ofFloat(logoHolder, "translationY", -1000f, 0f)
         anim.setDuration(2000)
         anim.start()
-
 
         Handler().postDelayed({
             val i: Intent = Intent(

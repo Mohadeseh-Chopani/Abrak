@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.abrak.Api.ApiService
 
 @Suppress("UNCHECKED_CAST")
-class WeatherViewModelFactory(val apiService: ApiService, val cityName: String) : ViewModelProvider.Factory {
+class WeatherViewModelFactory(val apiService: ApiService) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return ViewModelCurrentWeather(apiService, cityName) as T
+        return ViewModelWeather(apiService) as T
     }
 }

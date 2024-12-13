@@ -22,7 +22,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/background_light"
-    tools:context="com.example.android.navigationadvancedsample.formscreen.Register"
+    tools:context=".ui.View.bottomNavigation.Register"
     tools:layout_editor_absoluteY="81dp">
 
     <TextView

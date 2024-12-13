@@ -1,10 +1,8 @@
-package com.example.abrak.Api
+package com.example.abrak.network.api
 
-import com.example.abrak.Data.CurrentWeatherData
-import com.example.abrak.Data.ForecastWeatherData
-import io.reactivex.rxjava3.core.Observable
+import com.example.abrak.data.models.CurrentWeatherData
+import com.example.abrak.data.models.ForecastWeatherData
 import io.reactivex.rxjava3.core.Single
-import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -19,6 +17,6 @@ interface ApiService {
     fun getForecastData(
         @Query("token") token: String,
         @Query("city") city: String
-    ): Observable<ForecastWeatherData>
+    ): Single<ForecastWeatherData>
 
 }

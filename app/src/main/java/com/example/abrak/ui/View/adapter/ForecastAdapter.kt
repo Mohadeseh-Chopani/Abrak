@@ -1,4 +1,4 @@
-package com.example.abrak.Adapter
+package com.example.abrak.ui.View.adapter
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -7,15 +7,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.abrak.Api.ApiServiceProvider
-import com.example.abrak.Data.CurrentWeatherData
-import com.example.abrak.Data.ForecastWeatherData
-import com.example.abrak.Data.WeatherData
+import com.example.abrak.network.api.ApiServiceProvider
+import com.example.abrak.data.models.WeatherData
 import com.example.abrak.R
 import com.squareup.picasso.Picasso
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
 
 class ForecastAdapter(listData: List<WeatherData>) : RecyclerView.Adapter<ForecastAdapter.ForecastViewHolder>() {
 

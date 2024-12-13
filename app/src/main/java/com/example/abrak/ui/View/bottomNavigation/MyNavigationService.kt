@@ -1,4 +1,4 @@
-package com.example.abrak.View
+package com.example.abrak.ui.View.bottomNavigation
 
 import android.app.Service
 import android.content.Intent

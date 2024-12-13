@@ -1,8 +1,8 @@
-package com.example.abrak.ViewModel
+package com.example.abrak.ui.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.abrak.Api.ApiService
+import com.example.abrak.network.api.ApiService
 
 @Suppress("UNCHECKED_CAST")
 class WeatherViewModelFactory(val apiService: ApiService) : ViewModelProvider.Factory {

@@ -1,4 +1,4 @@
-package com.example.abrak.View
+package com.example.abrak.ui.View.activity
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -16,12 +16,12 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.abrak.Adapter.ForecastAdapter
-import com.example.abrak.Api.ApiServiceProvider
-import com.example.abrak.Data.WeatherData
+import com.example.abrak.network.api.ApiServiceProvider
+import com.example.abrak.data.models.WeatherData
 import com.example.abrak.R
-import com.example.abrak.ViewModel.ViewModelWeather
-import com.example.abrak.ViewModel.WeatherViewModelFactory
+import com.example.abrak.ui.View.adapter.ForecastAdapter
+import com.example.abrak.ui.viewModel.ViewModelWeather
+import com.example.abrak.ui.viewModel.WeatherViewModelFactory
 import com.google.android.gms.location.*
 import com.squareup.picasso.Picasso
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -195,7 +195,7 @@ class MainActivity : AppCompatActivity() {
             } ?: run {
                 itemHolder.visibility = View.GONE
                 searchNotFoundLayout.visibility = View.VISIBLE
-                showError("City not found")
+                showError("شهر مورد نظر یافت نشد")
             }
         }
 

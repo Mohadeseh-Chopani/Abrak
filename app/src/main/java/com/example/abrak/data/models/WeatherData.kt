@@ -1,4 +1,4 @@
-package com.example.abrak.Data
+package com.example.abrak.data.models
 
 data class CurrentWeatherData(
     val status: Int,

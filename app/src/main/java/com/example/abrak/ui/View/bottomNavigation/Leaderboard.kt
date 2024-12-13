@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.android.navigationadvancedsample.listscreen
+package com.example.abrak.ui.View.bottomNavigation
 
 import android.os.Bundle
 import android.view.LayoutInflater

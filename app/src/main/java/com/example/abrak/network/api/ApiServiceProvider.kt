@@ -1,9 +1,7 @@
-package com.example.abrak.Api
+package com.example.abrak.network.api
 
 import com.google.gson.GsonBuilder
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
-import io.reactivex.rxjava3.internal.schedulers.RxThreadFactory
-import io.reactivex.rxjava3.plugins.RxJavaPlugins
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

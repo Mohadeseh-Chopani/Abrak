@@ -1,4 +1,4 @@
-package com.example.abrak.View
+package com.example.abrak.ui.View.bottomNavigation
 
 import android.os.Bundle
 import android.view.LayoutInflater

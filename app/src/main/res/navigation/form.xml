@@ -24,7 +24,7 @@
 
     <fragment
             android:id="@+id/register"
-            android:name="com.example.android.navigationadvancedsample.formscreen.Register"
+            android:name="com.example.abrak.ui.View.bottomNavigation.Register"
             android:label="title_register"
             tools:layout="@layout/fragment_register">
         <action
@@ -33,7 +33,7 @@
     </fragment>
     <fragment
         android:id="@+id/registered"
-        android:name="com.example.android.navigationadvancedsample.formscreen.Registered"
+        android:name="com.example.abrak.ui.View.bottomNavigation.Registered"
         android:label="Registered"
         tools:layout="@layout/fragment_registered"/>
 </navigation>

@@ -24,7 +24,7 @@
 
     <fragment
         android:id="@+id/titleScreen"
-        android:name="com.example.android.navigationadvancedsample.homescreen.Title"
+        android:name="com.example.abrak.View.fragment.Title"
         android:label="title_home"
         tools:layout="@layout/fragment_title">
         <action
@@ -33,7 +33,7 @@
     </fragment>
     <fragment
         android:id="@+id/aboutScreen"
-        android:name="com.example.android.navigationadvancedsample.homescreen.About"
+        android:name="com.example.abrak.View.fragment.About"
         android:label="title_about"
         tools:layout="@layout/fragment_about"/>
 </navigation>

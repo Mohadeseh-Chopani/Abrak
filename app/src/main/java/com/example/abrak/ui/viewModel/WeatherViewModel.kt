@@ -1,20 +1,17 @@
 package com.example.abrak.ui.viewModel
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.abrak.network.api.ApiService
 import com.example.abrak.network.api.ApiServiceProvider
 import com.example.abrak.data.models.CurrentWeatherData
 import com.example.abrak.data.models.ForecastWeatherData
+import com.example.abrak.data.repository.WeatherRepositoryImp
 import com.example.abrak.ui.View.activity.MainActivity
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.schedulers.Schedulers
 
-class ViewModelWeather(private val apiService: ApiService) : ViewModel() {
+class WeatherViewModel(private val weatherRepositoryImp: WeatherRepositoryImp) : ViewModel() {
 
     private var currentLiveData: MutableLiveData<CurrentWeatherData> = MutableLiveData()
     private var forecastLiveData: MutableLiveData<ForecastWeatherData> = MutableLiveData()
@@ -24,50 +21,44 @@ class ViewModelWeather(private val apiService: ApiService) : ViewModel() {
     private val compositeDisposableCurrentData = CompositeDisposable()
     private val compositeDisposableForecastLiveData = CompositeDisposable()
 
+    init {
+
+    }
     fun getCurrentWeather(cityName: String): MutableLiveData<CurrentWeatherData> {
         setProgressBarCurrentVisible(false)
-        val disposableCurrentData = apiService.getCurrentData(ApiServiceProvider.API_KEY, cityName)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doFinally { setProgressBarCurrentVisible(true) }
-            .subscribe(
-                { response ->
-                    currentLiveData.value = response
-                    Log.i("request", "onResponse: $cityName")
 
-                },
-                { throwable ->
-                    Log.i("request", "onFailure: ${throwable.message}")
+        val data = weatherRepositoryImp.getCurrentData(ApiServiceProvider.API_KEY, cityName)
+        data.observeForever { value ->
+            currentLiveData.value = value
+        }
 
-                }
-            )
-        compositeDisposableCurrentData.add(disposableCurrentData)
+//        compositeDisposableCurrentData.add(disposableCurrentData)
         MainActivity.setCompositeDisposableCurrent(compositeDisposableCurrentData)
         return currentLiveData
     }
 
 
     @SuppressLint("CheckResult")
-    fun getForecastWeather(cityName: String): MutableLiveData<ForecastWeatherData> {
-
-        setProgressBarForecastVisible(false)
-        val disposableForecastData = apiService.getForecastData(ApiServiceProvider.API_KEY, city = cityName)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doFinally { setProgressBarForecastVisible(true) }
-            .subscribe({ response ->
-                forecastLiveData.value = response
-                Log.i("request", "onResponse: $cityName")
-
-            }, { throwable ->
-                Log.i("request", "onFailure: ${throwable.message}")
-            }
-            )
-
-        compositeDisposableForecastLiveData.add(disposableForecastData)
-        MainActivity.setCompositeDisposableForecast(compositeDisposableForecastLiveData)
-        return forecastLiveData
-    }
+//    fun getForecastWeather(cityName: String): MutableLiveData<ForecastWeatherData> {
+//
+//        setProgressBarForecastVisible(false)
+//        val disposableForecastData = apiService.getForecastData(ApiServiceProvider.API_KEY, city = cityName)
+//            .subscribeOn(Schedulers.io())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .doFinally { setProgressBarForecastVisible(true) }
+//            .subscribe({ response ->
+//                forecastLiveData.value = response
+//                Log.i("request", "onResponse: $cityName")
+//
+//            }, { throwable ->
+//                Log.i("request", "onFailure: ${throwable.message}")
+//            }
+//            )
+//
+//        compositeDisposableForecastLiveData.add(disposableForecastData)
+//        MainActivity.setCompositeDisposableForecast(compositeDisposableForecastLiveData)
+//        return forecastLiveData
+//    }
 
     fun getProgressBarCurrentVisible(): LiveData<Boolean> {
         return progressBarLiveData

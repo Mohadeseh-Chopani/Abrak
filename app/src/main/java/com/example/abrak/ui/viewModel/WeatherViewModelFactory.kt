@@ -7,7 +7,7 @@ import com.example.abrak.network.api.ApiService
 @Suppress("UNCHECKED_CAST")
 class WeatherViewModelFactory(val apiService: ApiService) : ViewModelProvider.Factory {
 
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return ViewModelWeather(apiService) as T
-    }
+//    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+//        return WeatherViewModel(apiService) as T
+//    }
 }

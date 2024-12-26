@@ -8,7 +8,7 @@ import retrofit2.http.Query
 
 interface ApiService {
     @GET("?action=current")
-    fun getCurrentData(
+     fun getCurrentData(
         @Query("token") token: String,
         @Query("city") city: String
     ): Single<CurrentWeatherData>

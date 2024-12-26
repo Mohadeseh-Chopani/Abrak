@@ -13,6 +13,7 @@ import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,7 +21,7 @@ import com.example.abrak.network.api.ApiServiceProvider
 import com.example.abrak.data.models.WeatherData
 import com.example.abrak.R
 import com.example.abrak.ui.View.adapter.ForecastAdapter
-import com.example.abrak.ui.viewModel.ViewModelWeather
+import com.example.abrak.ui.viewModel.WeatherViewModel
 import com.example.abrak.ui.viewModel.WeatherViewModelFactory
 import com.google.android.gms.location.*
 import com.squareup.picasso.Picasso
@@ -28,6 +29,9 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.getKoin
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -49,8 +53,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var itemHolder: View
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationRequest: LocationRequest
-    private lateinit var viewModelWeather: ViewModelWeather
+//    private val weatherViewModel: WeatherViewModel by viewModel()
     private var cityName: String? = null
+
+    private val weatherViewModel: WeatherViewModel by viewModel()
 
     private val locationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -106,11 +112,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeWeatherViewModel() {
-        viewModelWeather = ViewModelProvider(
-            this,
-            WeatherViewModelFactory(ApiServiceProvider.getApiService())
-        ).get(ViewModelWeather::class.java)
+//        weatherViewModel = ViewModelProvider(
+//            this,
+//            WeatherViewModelFactory(ApiServiceProvider.getApiService())
+//        ).get(WeatherViewModel::class.java)
+//        val weatherViewModel: WeatherViewModel by inject()
     }
+
 
     private fun setupLocationRequest() {
         locationRequest = LocationRequest.Builder(
@@ -173,9 +181,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun fetchWeatherByCity(city: String) {
-        viewModelWeather.getCurrentWeather(city).observe(this) { liveData ->
+        weatherViewModel.getCurrentWeather(city).observe(this, { liveData ->
             Log.d("requestTime", "fetchWeatherByCity: " + city)
-            liveData.result?.let { result ->
+            liveData?.result?.let { result ->
                 itemHolder.visibility = View.VISIBLE
                 searchNotFoundLayout.visibility = View.GONE
                 currentTemperature.text = "${result.main.temp.toInt()} °C"
@@ -189,7 +197,7 @@ class MainActivity : AppCompatActivity() {
                     )
                     .into(currentIcon)
 
-                viewModelWeather.getProgressBarCurrentVisible().observe(this, { status ->
+                weatherViewModel.getProgressBarCurrentVisible().observe(this, { status ->
                     showProgressBarCurrent(status)
                 })
             } ?: run {
@@ -197,32 +205,32 @@ class MainActivity : AppCompatActivity() {
                 searchNotFoundLayout.visibility = View.VISIBLE
                 showError("شهر مورد نظر یافت نشد")
             }
-        }
+        })
 
         val calendar = Calendar.getInstance()
         val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val todayTime = formatter.format(calendar.time)
 
-        viewModelWeather.getForecastWeather(city).observe(this) { liveData ->
-            val result: MutableList<WeatherData> = ArrayList()
-            Log.i("requestTime", "fetchWeatherByCity: ")
-            liveData?.result?.list?.let { list ->
-                for (i in 0 until list.size) {
-                    val date: List<String> = list.get(i).dt_txt.split(" ")
-                    if (date.get(0) == todayTime)
-                        result.add(list.get(i))
-                }
-
-                forecastAdapter = ForecastAdapter(result)
-                recyclerViewForecast.layoutManager =
-                    LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-                recyclerViewForecast.adapter = forecastAdapter
-
-                viewModelWeather.getProgressBarForecastVisible().observe(this) { status ->
-                    showProgressBarForecast(status)
-                }
-            }
-        }
+//        weatherViewModel.getForecastWeather(city).observe(this) { liveData ->
+//            val result: MutableList<WeatherData> = ArrayList()
+//            Log.i("requestTime", "fetchWeatherByCity: ")
+//            liveData?.result?.list?.let { list ->
+//                for (i in 0 until list.size) {
+//                    val date: List<String> = list.get(i).dt_txt.split(" ")
+//                    if (date.get(0) == todayTime)
+//                        result.add(list.get(i))
+//                }
+//
+//                forecastAdapter = ForecastAdapter(result)
+//                recyclerViewForecast.layoutManager =
+//                    LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+//                recyclerViewForecast.adapter = forecastAdapter
+//
+//                weatherViewModel.getProgressBarForecastVisible().observe(this) { status ->
+//                    showProgressBarForecast(status)
+//                }
+//            }
+//        }
     }
 
     override fun onDestroy() {

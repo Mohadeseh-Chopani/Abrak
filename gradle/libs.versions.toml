@@ -1,5 +1,5 @@
 [versions]
-agp = "8.5.2"
+agp = "8.7.0"
 kotlin = "2.0.20"
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -23,9 +23,10 @@ navigationRuntimeKtx = "2.8.4"
 rxandroid = "3.0.2"
 rxjava = "3.1.9"
 retroift_rxjava = "3.0.0"
-koin_core = "3.2.0"
-koin_android = "3.2.0"
-koin_viewModel = "3.2.0"
+koin_core = "3.4.0"
+koin_android = "3.4.0"
+koin_viewModel = "3.5.2"
+koin-bom = "3.5.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -50,10 +51,11 @@ androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navig
 rx-android = { group = "io.reactivex.rxjava3", name = "rxandroid", version.ref = "rxandroid" }
 rx-java = { group = "io.reactivex.rxjava3", name = "rxjava", version.ref = "rxjava" }
 rxjava-retrofit-adapter = { group = "com.github.akarnokd", name = "rxjava3-retrofit-adapter", version.ref = "retroift_rxjava" }
-koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin_core" }
+#koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin_core" }
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin_android" }
-koin-view-model = { group = "io.insert-koin", name = "koin-android-viewmodel", version.ref = "koin_viewModel" }
 
+#koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin-bom" }
+koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin_core" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

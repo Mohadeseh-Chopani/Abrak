@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "com.example.abrak"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.abrak"
@@ -59,6 +59,9 @@ dependencies {
     implementation(libs.rx.android)
     implementation(libs.rx.java)
     implementation(libs.rxjava.retrofit.adapter)
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
+//    implementation(libs.koin.bom)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -39,26 +39,16 @@ class WeatherViewModel(private val weatherRepositoryImp: WeatherRepositoryImp) :
 
 
     @SuppressLint("CheckResult")
-//    fun getForecastWeather(cityName: String): MutableLiveData<ForecastWeatherData> {
-//
-//        setProgressBarForecastVisible(false)
-//        val disposableForecastData = apiService.getForecastData(ApiServiceProvider.API_KEY, city = cityName)
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .doFinally { setProgressBarForecastVisible(true) }
-//            .subscribe({ response ->
-//                forecastLiveData.value = response
-//                Log.i("request", "onResponse: $cityName")
-//
-//            }, { throwable ->
-//                Log.i("request", "onFailure: ${throwable.message}")
-//            }
-//            )
-//
+    fun getForecastWeather(cityName: String): MutableLiveData<ForecastWeatherData> {
+        val data = weatherRepositoryImp.getForecastData(token = ApiServiceProvider.API_KEY, city = cityName)
+        data.observeForever { value ->
+            forecastLiveData.value = value
+        }
+
 //        compositeDisposableForecastLiveData.add(disposableForecastData)
-//        MainActivity.setCompositeDisposableForecast(compositeDisposableForecastLiveData)
-//        return forecastLiveData
-//    }
+        MainActivity.setCompositeDisposableForecast(compositeDisposableForecastLiveData)
+        return forecastLiveData
+    }
 
     fun getProgressBarCurrentVisible(): LiveData<Boolean> {
         return progressBarLiveData

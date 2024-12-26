@@ -211,26 +211,26 @@ class MainActivity : AppCompatActivity() {
         val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val todayTime = formatter.format(calendar.time)
 
-//        weatherViewModel.getForecastWeather(city).observe(this) { liveData ->
-//            val result: MutableList<WeatherData> = ArrayList()
-//            Log.i("requestTime", "fetchWeatherByCity: ")
-//            liveData?.result?.list?.let { list ->
-//                for (i in 0 until list.size) {
-//                    val date: List<String> = list.get(i).dt_txt.split(" ")
-//                    if (date.get(0) == todayTime)
-//                        result.add(list.get(i))
-//                }
-//
-//                forecastAdapter = ForecastAdapter(result)
-//                recyclerViewForecast.layoutManager =
-//                    LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-//                recyclerViewForecast.adapter = forecastAdapter
-//
-//                weatherViewModel.getProgressBarForecastVisible().observe(this) { status ->
-//                    showProgressBarForecast(status)
-//                }
-//            }
-//        }
+        weatherViewModel.getForecastWeather(city).observe(this) { liveData ->
+            val result: MutableList<WeatherData> = ArrayList()
+            Log.i("requestTime", "fetchWeatherByCity: ")
+            liveData?.result?.list?.let { list ->
+                for (i in 0 until list.size) {
+                    val date: List<String> = list.get(i).dt_txt.split(" ")
+                    if (date.get(0) == todayTime)
+                        result.add(list.get(i))
+                }
+
+                forecastAdapter = ForecastAdapter(result)
+                recyclerViewForecast.layoutManager =
+                    LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+                recyclerViewForecast.adapter = forecastAdapter
+
+                weatherViewModel.getProgressBarForecastVisible().observe(this) { status ->
+                    showProgressBarForecast(status)
+                }
+            }
+        }
     }
 
     override fun onDestroy() {

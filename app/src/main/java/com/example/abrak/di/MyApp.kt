@@ -2,6 +2,7 @@ package com.example.abrak.di
 
 import android.app.Application
 import com.example.abrak.data.dataSource.remote.WeatherRemoteDataSourceImp
+import com.example.abrak.data.repository.ImageLoadServiceImp
 import com.example.abrak.data.repository.WeatherRepositoryImp
 import com.example.abrak.network.api.ApiServiceProvider
 import com.example.abrak.ui.viewModel.WeatherViewModel
@@ -21,7 +22,7 @@ class MyApp: Application() {
 
         val myModules = module {
             singleOf(ApiServiceProvider::getApiService)
-
+            singleOf(::ImageLoadServiceImp)
             // Define RemoteDataSource
             factoryOf(::WeatherRemoteDataSourceImp)
 

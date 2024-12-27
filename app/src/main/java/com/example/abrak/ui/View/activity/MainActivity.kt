@@ -21,6 +21,7 @@ import com.example.abrak.network.api.ApiServiceProvider
 import com.example.abrak.data.models.WeatherData
 import com.example.abrak.R
 import com.example.abrak.data.models.ForecastWeatherData
+import com.example.abrak.data.repository.ImageLoadServiceImp
 import com.example.abrak.ui.View.adapter.ForecastAdapter
 import com.example.abrak.ui.viewModel.WeatherViewModel
 import com.example.abrak.ui.viewModel.WeatherViewModelFactory
@@ -58,6 +59,7 @@ class MainActivity : AppCompatActivity() {
 //    private val weatherViewModel: WeatherViewModel by viewModel()
     private var cityName: String? = null
 
+    private val imageLoad: ImageLoadServiceImp by inject()
     private val weatherViewModel: WeatherViewModel by viewModel()
 
     private val locationPermissionLauncher = registerForActivityResult(
@@ -200,11 +202,9 @@ class MainActivity : AppCompatActivity() {
                         countryName.text = "${result.sys.country} / $city"
                         currentTime.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
 
-                        Picasso.get()
-                            .load(
-                                "${ApiServiceProvider.BASE_URL}?token=${ApiServiceProvider.API_KEY}&action=icon&id=${result.weather.get(0).icon}"
-                            )
-                            .into(currentIcon)
+                        imageLoad.loadImage(currentIcon,
+                            "${ApiServiceProvider.BASE_URL}?token=${ApiServiceProvider.API_KEY}&action=icon&id=${result.weather.get(0).icon}"
+                        )
 
                         weatherViewModel.getProgressBarCurrentVisible().observe(this, { status ->
                             showProgressBarCurrent(status)

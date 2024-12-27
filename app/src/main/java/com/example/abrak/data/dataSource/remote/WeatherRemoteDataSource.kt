@@ -6,6 +6,6 @@ import com.example.abrak.data.models.ForecastWeatherData
 import io.reactivex.rxjava3.core.Single
 
 interface WeatherRemoteDataSource {
-     fun getCurrentData(token: String, city: String): LiveData<CurrentWeatherData>
-     fun getForecastData(token: String, city: String): LiveData<ForecastWeatherData>
+     fun getCurrentData(token: String, city: String): Single<CurrentWeatherData>
+     fun getForecastData(token: String, city: String): Single<ForecastWeatherData>
 }

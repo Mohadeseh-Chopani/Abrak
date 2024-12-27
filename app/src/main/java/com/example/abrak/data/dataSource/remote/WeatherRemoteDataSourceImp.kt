@@ -9,48 +9,18 @@ import com.example.abrak.data.models.CurrentWeatherData
 import com.example.abrak.data.models.ForecastWeatherData
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 class WeatherRemoteDataSourceImp(val apiService: ApiService) : WeatherRemoteDataSource {
 
     @SuppressLint("CheckResult")
-    override fun getCurrentData(token: String, city: String): LiveData<CurrentWeatherData> {
-        val liveData = MutableLiveData<CurrentWeatherData>()
-
-        apiService.getCurrentData(token, city)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                { response ->
-                    liveData.value = response
-                    Log.i("request", "onResponse: $city")
-
-                },
-                { throwable ->
-                    Log.i("request", "onFailure: ${throwable.message}")
-
-                }
-            )
-
-        return liveData
+    override fun getCurrentData(token: String, city: String): Single<CurrentWeatherData> {
+        return apiService.getCurrentData(token, city)
     }
 
     @SuppressLint("CheckResult")
-    override fun getForecastData(token: String, city: String): LiveData<ForecastWeatherData> {
-        val liveData = MutableLiveData<ForecastWeatherData>()
-
-        apiService.getForecastData(token, city)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                { response ->
-                    liveData.value = response
-                    Log.i("request", "onResponse: $city")
-                },
-                { throwable ->
-                    Log.i("request", "onFailure: ${throwable.message}")
-                }
-            )
-        return liveData
+    override fun getForecastData(token: String, city: String): Single<ForecastWeatherData> {
+        return apiService.getForecastData(token, city)
     }
 }

@@ -20,9 +20,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.abrak.network.api.ApiServiceProvider
 import com.example.abrak.data.models.WeatherData
 import com.example.abrak.R
+import com.example.abrak.data.models.ForecastWeatherData
 import com.example.abrak.ui.View.adapter.ForecastAdapter
 import com.example.abrak.ui.viewModel.WeatherViewModel
 import com.example.abrak.ui.viewModel.WeatherViewModelFactory
+import com.example.abrak.utils.NetworkState
 import com.google.android.gms.location.*
 import com.squareup.picasso.Picasso
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -181,53 +183,79 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun fetchWeatherByCity(city: String) {
-        weatherViewModel.getCurrentWeather(city).observe(this, { liveData ->
-            Log.d("requestTime", "fetchWeatherByCity: " + city)
-            liveData?.result?.let { result ->
-                itemHolder.visibility = View.VISIBLE
-                searchNotFoundLayout.visibility = View.GONE
-                currentTemperature.text = "${result.main.temp.toInt()} °C"
-                currentDescription.text = result.weather[0].description
-                countryName.text = "${result.sys.country} / $city"
-                currentTime.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
+        weatherViewModel.getCurrentWeather(cityName = city)
+        weatherViewModel.CurrentState.observe(this) { state ->
+            when (state) {
+                is NetworkState.Loading -> {
+                    showProgressBarCurrent(true)
+                }
+                is NetworkState.Success -> {
+                    showProgressBarCurrent(false)
+                    val data = state.data.result
+                    data?.let { result ->
+                        itemHolder.visibility = View.VISIBLE
+                        searchNotFoundLayout.visibility = View.GONE
+                        currentTemperature.text = "${result.main.temp.toInt()} °C"
+                        currentDescription.text = result.weather.get(0).description
+                        countryName.text = "${result.sys.country} / $city"
+                        currentTime.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
 
-                Picasso.get()
-                    .load(
-                        "${ApiServiceProvider.BASE_URL}?token=${ApiServiceProvider.API_KEY}&action=icon&id=${result.weather[0].icon}"
-                    )
-                    .into(currentIcon)
+                        Picasso.get()
+                            .load(
+                                "${ApiServiceProvider.BASE_URL}?token=${ApiServiceProvider.API_KEY}&action=icon&id=${result.weather.get(0).icon}"
+                            )
+                            .into(currentIcon)
 
-                weatherViewModel.getProgressBarCurrentVisible().observe(this, { status ->
-                    showProgressBarCurrent(status)
-                })
-            } ?: run {
-                itemHolder.visibility = View.GONE
-                searchNotFoundLayout.visibility = View.VISIBLE
-                showError("شهر مورد نظر یافت نشد")
+                        weatherViewModel.getProgressBarCurrentVisible().observe(this, { status ->
+                            showProgressBarCurrent(status)
+                        })
+                    } ?: run {
+                        itemHolder.visibility = View.GONE
+                        searchNotFoundLayout.visibility = View.VISIBLE
+                        showError("شهر مورد نظر یافت نشد")
+                    }
+                }
+                is NetworkState.Error -> {
+                    showProgressBarCurrent(false)
+                    //showError message
+                }
             }
-        })
+        }
+
 
         val calendar = Calendar.getInstance()
         val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val todayTime = formatter.format(calendar.time)
 
-        weatherViewModel.getForecastWeather(city).observe(this) { liveData ->
-            val result: MutableList<WeatherData> = ArrayList()
-            Log.i("requestTime", "fetchWeatherByCity: ")
-            liveData?.result?.list?.let { list ->
-                for (i in 0 until list.size) {
-                    val date: List<String> = list.get(i).dt_txt.split(" ")
-                    if (date.get(0) == todayTime)
-                        result.add(list.get(i))
+        weatherViewModel.getForecastWeather(city)
+        weatherViewModel.state.observe(this) { state ->
+            when (state) {
+                is NetworkState.Loading -> {
+                    showProgressBarForecast(true)
                 }
+                is NetworkState.Success -> {
+                    showProgressBarForecast(false)
+                    val data = state?.data?.result?.list
+                    val result: MutableList<WeatherData> = ArrayList()
+                    Log.i("requestTime", "fetchWeatherByCity: ")
+                    data?.forEach{ weatherItem ->
+                            val date: List<String> = weatherItem.dt_txt.split(" ")
+                            if (date[0] == todayTime)
+                                result.add(weatherItem)
 
-                forecastAdapter = ForecastAdapter(result)
-                recyclerViewForecast.layoutManager =
-                    LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-                recyclerViewForecast.adapter = forecastAdapter
+                        forecastAdapter = ForecastAdapter(result)
+                        recyclerViewForecast.layoutManager =
+                            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+                        recyclerViewForecast.adapter = forecastAdapter
 
-                weatherViewModel.getProgressBarForecastVisible().observe(this) { status ->
-                    showProgressBarForecast(status)
+                        weatherViewModel.getProgressBarForecastVisible().observe(this) { status ->
+                            showProgressBarForecast(status)
+                        }
+                    }
+                }
+                is NetworkState.Error -> {
+                    showProgressBarForecast(false)
+                    // Show error message
                 }
             }
         }
@@ -241,16 +269,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun showProgressBarCurrent(status: Boolean) {
         if (status)
-            loading.visibility = View.GONE
-        else
             loading.visibility = View.VISIBLE
+        else
+            loading.visibility = View.GONE
     }
 
     private fun showProgressBarForecast(status: Boolean) {
         if (status)
-            progressBarForecast.visibility = View.GONE
-        else
             progressBarForecast.visibility = View.VISIBLE
+        else
+            progressBarForecast.visibility = View.GONE
     }
 
 

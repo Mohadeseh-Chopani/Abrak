@@ -1,5 +1,6 @@
-package com.example.abrak.network.api
+package com.example.abrak.network.api.prayerTimeAPI
 
+import com.example.abrak.network.api.weatherAPI.WeatherApiService
 import com.google.gson.GsonBuilder
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
 import okhttp3.OkHttpClient

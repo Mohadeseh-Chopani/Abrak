@@ -1,12 +1,14 @@
 package com.example.abrak.di
 
 import android.app.Application
-import com.example.abrak.data.dataSource.remote.WeatherRemoteDataSourceImp
-import com.example.abrak.data.repository.ImageLoadServiceImp
-import com.example.abrak.data.repository.WeatherRepositoryImp
-import com.example.abrak.network.api.PrayerTimeApiServiceProvider
-import com.example.abrak.network.api.WeatherApiServiceProvider
-import com.example.abrak.ui.viewModel.WeatherViewModel
+import com.example.abrak.data.dataSource.remote.prayerTime.PrayerTimeRemoteDataSourceImp
+import com.example.abrak.data.dataSource.remote.weather.WeatherRemoteDataSourceImp
+import com.example.abrak.data.repository.imageLoad.ImageLoadServiceImp
+import com.example.abrak.data.repository.prayerTime.PrayerTimeRepositoryImp
+import com.example.abrak.data.repository.weather.WeatherRepositoryImp
+import com.example.abrak.network.api.prayerTimeAPI.PrayerTimeApiServiceProvider
+import com.example.abrak.network.api.weatherAPI.WeatherApiServiceProvider
+import com.example.abrak.ui.viewModel.weather.WeatherViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.viewmodel.dsl.viewModelOf
@@ -35,6 +37,8 @@ class MyApp: Application() {
 
 
             singleOf(PrayerTimeApiServiceProvider::getApiService)
+            factoryOf(::PrayerTimeRemoteDataSourceImp)
+            factoryOf(::PrayerTimeRepositoryImp)
         }
 
 

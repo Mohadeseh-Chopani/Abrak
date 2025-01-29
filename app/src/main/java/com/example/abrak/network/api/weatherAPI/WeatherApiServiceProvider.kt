@@ -1,4 +1,4 @@
-package com.example.abrak.network.api
+package com.example.abrak.network.api.weatherAPI
 
 import com.google.gson.GsonBuilder
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory

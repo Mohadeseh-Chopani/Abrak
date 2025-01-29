@@ -1,7 +1,5 @@
-package com.example.abrak.network.api
+package com.example.abrak.network.api.prayerTimeAPI
 
-import com.example.abrak.data.models.CurrentWeatherData
-import com.example.abrak.data.models.ForecastWeatherData
 import com.example.abrak.data.models.PrayerTimeData
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.GET

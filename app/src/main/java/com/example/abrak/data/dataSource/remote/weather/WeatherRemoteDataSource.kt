@@ -1,12 +1,10 @@
-package com.example.abrak.data.repository
+package com.example.abrak.data.dataSource.remote.weather
 
-import androidx.lifecycle.LiveData
 import com.example.abrak.data.models.CurrentWeatherData
 import com.example.abrak.data.models.ForecastWeatherData
-import com.example.abrak.data.models.WeatherData
 import io.reactivex.rxjava3.core.Single
 
-interface WeatherRepository {
+interface WeatherRemoteDataSource {
      fun getCurrentData(token: String, city: String): Single<CurrentWeatherData>
      fun getForecastData(token: String, city: String): Single<ForecastWeatherData>
 }

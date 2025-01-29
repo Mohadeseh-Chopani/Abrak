@@ -1,14 +1,14 @@
-package com.example.abrak.ui.viewModel
+package com.example.abrak.ui.viewModel.weather
 
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.abrak.network.api.WeatherApiServiceProvider
+import com.example.abrak.network.api.weatherAPI.WeatherApiServiceProvider
 import com.example.abrak.data.models.CurrentWeatherData
 import com.example.abrak.data.models.ForecastWeatherData
-import com.example.abrak.data.repository.WeatherRepositoryImp
+import com.example.abrak.data.repository.weather.WeatherRepositoryImp
 import com.example.abrak.utils.NetworkState
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers

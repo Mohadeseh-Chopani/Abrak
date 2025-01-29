@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.abrak.network.api.WeatherApiServiceProvider
+import com.example.abrak.network.api.weatherAPI.WeatherApiServiceProvider
 import com.example.abrak.data.models.WeatherData
 import com.example.abrak.R
 import com.squareup.picasso.Picasso

@@ -1,12 +1,13 @@
-package com.example.abrak.data.dataSource.remote
+package com.example.abrak.data.dataSource.remote.weather
 
 import android.annotation.SuppressLint
-import com.example.abrak.network.api.WeatherApiService
+import com.example.abrak.network.api.weatherAPI.WeatherApiService
 import com.example.abrak.data.models.CurrentWeatherData
 import com.example.abrak.data.models.ForecastWeatherData
 import io.reactivex.rxjava3.core.Single
 
-class WeatherRemoteDataSourceImp(val weatherApiService: WeatherApiService) : WeatherRemoteDataSource {
+class WeatherRemoteDataSourceImp(val weatherApiService: WeatherApiService) :
+    WeatherRemoteDataSource {
 
     @SuppressLint("CheckResult")
     override fun getCurrentData(token: String, city: String): Single<CurrentWeatherData> {

@@ -38,7 +38,7 @@ package com.example.abrak.ui.View.bottomNavigation//package com.example.abrak.Vi
 //import com.example.abrak.Data.WeatherData
 //import com.example.abrak.R
 //import com.example.abrak.ViewModel.ViewModelCurrentWeather
-//import com.example.abrak.ui.viewModel.WeatherViewModelFactory
+//import com.example.abrak.ui.viewModel.weather.WeatherViewModelFactory
 //import com.google.android.gms.common.api.ResolvableApiException
 //import com.google.android.gms.location.FusedLocationProviderClient
 //import com.google.android.gms.location.LocationCallback

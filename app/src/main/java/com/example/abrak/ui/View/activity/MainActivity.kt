@@ -15,12 +15,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.abrak.network.api.WeatherApiServiceProvider
+import com.example.abrak.network.api.weatherAPI.WeatherApiServiceProvider
 import com.example.abrak.data.models.WeatherData
 import com.example.abrak.R
-import com.example.abrak.data.repository.ImageLoadServiceImp
+import com.example.abrak.data.repository.imageLoad.ImageLoadServiceImp
 import com.example.abrak.ui.View.adapter.ForecastAdapter
-import com.example.abrak.ui.viewModel.WeatherViewModel
+import com.example.abrak.ui.viewModel.weather.WeatherViewModel
 import com.example.abrak.utils.NetworkState
 import com.google.android.gms.location.*
 import io.reactivex.rxjava3.disposables.CompositeDisposable

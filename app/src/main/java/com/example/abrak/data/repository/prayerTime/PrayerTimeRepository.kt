@@ -1,6 +1,5 @@
-package com.example.abrak.data.repository
+package com.example.abrak.data.repository.prayerTime
 
-import com.example.abrak.data.models.CurrentWeatherData
 import com.example.abrak.data.models.PrayerTimeData
 import io.reactivex.rxjava3.core.Single
 

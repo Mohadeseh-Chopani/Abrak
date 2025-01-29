@@ -1,4 +1,4 @@
-package com.example.abrak.network.api
+package com.example.abrak.network.api.weatherAPI
 
 import com.example.abrak.data.models.CurrentWeatherData
 import com.example.abrak.data.models.ForecastWeatherData

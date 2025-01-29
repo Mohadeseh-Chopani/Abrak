@@ -6,7 +6,7 @@ import io.reactivex.rxjava3.core.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface ApiService {
+interface WeatherApiService {
     @GET("?action=current")
      fun getCurrentData(
         @Query("token") token: String,

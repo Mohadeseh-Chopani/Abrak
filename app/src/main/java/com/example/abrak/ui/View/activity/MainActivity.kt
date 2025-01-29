@@ -13,26 +13,20 @@ import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.abrak.network.api.ApiServiceProvider
+import com.example.abrak.network.api.WeatherApiServiceProvider
 import com.example.abrak.data.models.WeatherData
 import com.example.abrak.R
-import com.example.abrak.data.models.ForecastWeatherData
 import com.example.abrak.data.repository.ImageLoadServiceImp
 import com.example.abrak.ui.View.adapter.ForecastAdapter
 import com.example.abrak.ui.viewModel.WeatherViewModel
-import com.example.abrak.ui.viewModel.WeatherViewModelFactory
 import com.example.abrak.utils.NetworkState
 import com.google.android.gms.location.*
-import com.squareup.picasso.Picasso
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.getKoin
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.IOException
@@ -203,7 +197,7 @@ class MainActivity : AppCompatActivity() {
                         currentTime.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
 
                         imageLoad.loadImage(currentIcon,
-                            "${ApiServiceProvider.BASE_URL}?token=${ApiServiceProvider.API_KEY}&action=icon&id=${result.weather.get(0).icon}"
+                            "${WeatherApiServiceProvider.BASE_URL}?token=${WeatherApiServiceProvider.API_KEY}&action=icon&id=${result.weather.get(0).icon}"
                         )
 
                         weatherViewModel.getProgressBarCurrentVisible().observe(this, { status ->

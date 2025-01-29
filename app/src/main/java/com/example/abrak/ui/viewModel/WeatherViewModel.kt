@@ -5,14 +5,12 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.abrak.network.api.ApiServiceProvider
+import com.example.abrak.network.api.WeatherApiServiceProvider
 import com.example.abrak.data.models.CurrentWeatherData
 import com.example.abrak.data.models.ForecastWeatherData
 import com.example.abrak.data.repository.WeatherRepositoryImp
-import com.example.abrak.ui.View.activity.MainActivity
 import com.example.abrak.utils.NetworkState
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 class WeatherViewModel(private val weatherRepositoryImp: WeatherRepositoryImp) : ViewModel() {
@@ -32,7 +30,7 @@ class WeatherViewModel(private val weatherRepositoryImp: WeatherRepositoryImp) :
     @SuppressLint("CheckResult")
     fun getCurrentWeather(cityName: String): MutableLiveData<CurrentWeatherData> {
         _CurrentState.value = NetworkState.Loading
-        weatherRepositoryImp.getCurrentData(ApiServiceProvider.API_KEY, cityName)
+        weatherRepositoryImp.getCurrentData(WeatherApiServiceProvider.API_KEY, cityName)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ response ->
@@ -56,7 +54,7 @@ class WeatherViewModel(private val weatherRepositoryImp: WeatherRepositoryImp) :
     @SuppressLint("CheckResult")
     fun getForecastWeather(cityName: String): MutableLiveData<ForecastWeatherData>{
         _state.value = NetworkState.Loading
-        weatherRepositoryImp.getForecastData(token = ApiServiceProvider.API_KEY, city = cityName)
+        weatherRepositoryImp.getForecastData(token = WeatherApiServiceProvider.API_KEY, city = cityName)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(

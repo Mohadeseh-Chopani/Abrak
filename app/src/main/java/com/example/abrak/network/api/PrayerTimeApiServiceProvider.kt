@@ -8,10 +8,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-class ApiServiceProvider {
-
+class PrayerTimeApiServiceProvider {
     companion object {
-        val BASE_URL = "https://one-api.ir/weather/"
+        val BASE_URL = "https://one-api.ir/owghat/"
 
         // Create a lenient Gson instance
         val gson = GsonBuilder()
@@ -32,7 +31,7 @@ class ApiServiceProvider {
             .build()
 
 
-        fun getApiService(): ApiService {
+        fun getApiService(): WeatherApiService {
             val retrofit: Retrofit = Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
@@ -40,9 +39,9 @@ class ApiServiceProvider {
                 .client(okHttpClient)
                 .build()
 
-            val apiService: ApiService = retrofit.create(ApiService::class.java)
+            val weatherApiService: WeatherApiService = retrofit.create(WeatherApiService::class.java)
 
-            return apiService
+            return weatherApiService
         }
     }
 }

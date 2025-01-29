@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.abrak.network.api.ApiServiceProvider
+import com.example.abrak.network.api.WeatherApiServiceProvider
 import com.example.abrak.data.models.WeatherData
 import com.example.abrak.R
 import com.squareup.picasso.Picasso
@@ -42,7 +42,7 @@ class ForecastAdapter(listData: List<WeatherData>) : RecyclerView.Adapter<Foreca
             airGrade.setText(temperature.toString() + " C°")
             Picasso.get()
                 .load(
-                    ApiServiceProvider.BASE_URL + "?token=" + ApiServiceProvider.API_KEY + "&action=icon&id=" +
+                    WeatherApiServiceProvider.BASE_URL + "?token=" + WeatherApiServiceProvider.API_KEY + "&action=icon&id=" +
                             items.weather.get(0).icon
                 )
                 .into(img)

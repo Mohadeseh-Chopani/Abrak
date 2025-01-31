@@ -9,7 +9,7 @@ class PrayerTimeRepositoryImp(val prayerTimeRemoteDataSourceImp: PrayerTimeRemot
     private var prayerTimeCompositDisposable: CompositeDisposable? = null
 
     override fun getPrayerTime(token: String, city: String): Single<PrayerTimeData> {
-        return prayerTimeRemoteDataSourceImp.prayerTimeApiService.getPrayerTime(token, city)
+        return prayerTimeRemoteDataSourceImp.getPrayerTime(token, city)
             .doOnSubscribe { disposable -> prayerTimeCompositDisposable?.add(disposable) }
             .doOnSuccess {  }
             .doFinally {  }

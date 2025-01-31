@@ -32,7 +32,7 @@ class PrayerTimeApiServiceProvider {
             .build()
 
 
-        fun getApiService(): WeatherApiService {
+        fun getApiService(): PrayerTimeApiService {
             val retrofit: Retrofit = Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
@@ -40,9 +40,9 @@ class PrayerTimeApiServiceProvider {
                 .client(okHttpClient)
                 .build()
 
-            val weatherApiService: WeatherApiService = retrofit.create(WeatherApiService::class.java)
+            val prayerTimeApiService: PrayerTimeApiService = retrofit.create(PrayerTimeApiService::class.java)
 
-            return weatherApiService
+            return prayerTimeApiService
         }
     }
 }

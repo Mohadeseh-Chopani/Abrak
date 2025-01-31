@@ -6,7 +6,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface PrayerTimeApiService {
-    @GET("?en_num=false")
+    @GET("?en_num=true")
      fun getPrayerTime(
         @Query("token") token: String,
         @Query("city") city: String

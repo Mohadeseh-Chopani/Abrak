@@ -1,14 +1,22 @@
 package com.example.abrak.data.models
+
+import android.os.Parcelable
+import java.io.Serializable
+
 data class PrayerTimeData(
-    var city: String? = null,
-    var azanSobh: String? = null,
-    var toloeAftab: String? = null,
-    var azanZohre: String? = null,
-    var ghorobAftab: String? = null,
-    var azanMaghreb: String? = null,
-    var nimeShabeSharie: String? = null,
-    var month: String? = null,
-    var day: String? = null,
-    var longitude: String? = null,
-    var latitude: String? = null
+    val result: PrayerResult? = null
+) : Serializable
+
+data class PrayerResult(
+    val city: String,
+    val azan_sobh: String,
+    val toloe_aftab: String,
+    val azan_zohre: String,
+    val ghorob_aftab: String,
+    val azan_maghreb: String,
+    val nime_shabe_sharie: String,
+    val month: String,
+    val day: String,
+    val longitude: String,
+    val latitude: String
 )

@@ -8,6 +8,7 @@ import com.example.abrak.data.repository.prayerTime.PrayerTimeRepositoryImp
 import com.example.abrak.data.repository.weather.WeatherRepositoryImp
 import com.example.abrak.network.api.prayerTimeAPI.PrayerTimeApiServiceProvider
 import com.example.abrak.network.api.weatherAPI.WeatherApiServiceProvider
+import com.example.abrak.ui.viewModel.prayerTime.PrayerTimeViewModel
 import com.example.abrak.ui.viewModel.weather.WeatherViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -25,20 +26,17 @@ class MyApp: Application() {
 
         val myModules = module {
             singleOf(WeatherApiServiceProvider::getApiService)
+            singleOf(PrayerTimeApiServiceProvider::getApiService)
+
             singleOf(::ImageLoadServiceImp)
-            // Define RemoteDataSource
+
             factoryOf(::WeatherRemoteDataSourceImp)
-
-            // Define Repository
             factoryOf(::WeatherRepositoryImp)
-
-            // Define ViewModel
             viewModelOf(::WeatherViewModel)
 
-
-            singleOf(PrayerTimeApiServiceProvider::getApiService)
             factoryOf(::PrayerTimeRemoteDataSourceImp)
             factoryOf(::PrayerTimeRepositoryImp)
+            viewModelOf(::PrayerTimeViewModel)
         }
 
 

@@ -13,16 +13,22 @@ import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.abrak.network.api.weatherAPI.WeatherApiServiceProvider
 import com.example.abrak.data.models.WeatherData
 import com.example.abrak.R
+import com.example.abrak.data.models.PrayerTimeData
 import com.example.abrak.data.repository.imageLoad.ImageLoadServiceImp
 import com.example.abrak.ui.View.adapter.ForecastAdapter
+import com.example.abrak.ui.View.bottomNavigation.PrayerTimeFragment
+import com.example.abrak.ui.viewModel.prayerTime.PrayerTimeViewModel
 import com.example.abrak.ui.viewModel.weather.WeatherViewModel
 import com.example.abrak.utils.NetworkState
 import com.google.android.gms.location.*
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,6 +36,7 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.IOException
+import java.lang.reflect.Array.newInstance
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -50,11 +57,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var itemHolder: View
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationRequest: LocationRequest
-//    private val weatherViewModel: WeatherViewModel by viewModel()
+    private lateinit var prayerTimebtn: FloatingActionButton
+    private var PrayerTimeLiveData: MutableLiveData<PrayerTimeData> = MutableLiveData()
     private var cityName: String? = null
 
     private val imageLoad: ImageLoadServiceImp by inject()
     private val weatherViewModel: WeatherViewModel by viewModel()
+    private val prayerTimeViewModel: PrayerTimeViewModel by viewModel()
 
     private val locationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -80,6 +89,10 @@ class MainActivity : AppCompatActivity() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         setupLocationRequest()
 
+        fetchWeatherByCity("تهران")
+        fetchPrayerTimeByCity("تهران")
+        checkLocationPermissions()
+
         btnSearch.setOnClickListener {
             cityName = searchEditText.text.toString()
             if (!cityName.isNullOrBlank()) {
@@ -89,9 +102,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        fetchWeatherByCity("تهران")
-
-        checkLocationPermissions()
+        prayerTimebtn.setOnClickListener {
+            val bottomSheet = PrayerTimeFragment(PrayerTimeLiveData)
+            bottomSheet.show(supportFragmentManager, "MyBottomSheetFragment")
+        }
     }
 
     private fun initializeViews() {
@@ -107,6 +121,7 @@ class MainActivity : AppCompatActivity() {
         searchNotFoundLayout = findViewById(R.id.search_not_found)
         itemHolder = findViewById(R.id.item_holder)
         progressBarForecast = findViewById(R.id.progressBar_forecast)
+        prayerTimebtn = findViewById(R.id.btn_prayer)
     }
 
     private fun initializeWeatherViewModel() {
@@ -178,6 +193,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun fetchPrayerTimeByCity(city: String) {
+        prayerTimeViewModel.getPrayerTime(city)
+        prayerTimeViewModel.CurrentTime.observe(this) { state ->
+            when (state) {
+                is NetworkState.Loading -> {}
+                is NetworkState.Success -> {
+                    val data = state.data
+                    PrayerTimeLiveData.value = data
+                }
+                is NetworkState.Error -> {}
+            }
+        }
+    }
     private fun fetchWeatherByCity(city: String) {
         weatherViewModel.getCurrentWeather(cityName = city)
         weatherViewModel.CurrentState.observe(this) { state ->

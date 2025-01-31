@@ -15,8 +15,6 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 
 class WeatherViewModel(private val weatherRepositoryImp: WeatherRepositoryImp) : ViewModel() {
 
-    private var currentLiveData: MutableLiveData<CurrentWeatherData> = MutableLiveData()
-    private var forecastLiveData: MutableLiveData<ForecastWeatherData> = MutableLiveData()
     private val progressBarLiveData = MutableLiveData<Boolean>()
     private val progressBarForecastLiveData = MutableLiveData<Boolean>()
 
@@ -28,7 +26,7 @@ class WeatherViewModel(private val weatherRepositoryImp: WeatherRepositoryImp) :
     val CurrentState: LiveData<NetworkState<CurrentWeatherData>> get() = _CurrentState
 
     @SuppressLint("CheckResult")
-    fun getCurrentWeather(cityName: String): MutableLiveData<CurrentWeatherData> {
+    fun getCurrentWeather(cityName: String) {
         _CurrentState.value = NetworkState.Loading
         weatherRepositoryImp.getCurrentData(WeatherApiServiceProvider.API_KEY, cityName)
             .subscribeOn(Schedulers.io())
@@ -44,7 +42,6 @@ class WeatherViewModel(private val weatherRepositoryImp: WeatherRepositoryImp) :
 
 //        compositeDisposableCurrentData.add(disposableCurrentData)
 //        MainActivity.setCompositeDisposableCurrent(compositeDisposableCurrentData)
-        return currentLiveData
     }
 
 
@@ -52,7 +49,7 @@ class WeatherViewModel(private val weatherRepositoryImp: WeatherRepositoryImp) :
     val state: LiveData<NetworkState<ForecastWeatherData>> get() = _state
 
     @SuppressLint("CheckResult")
-    fun getForecastWeather(cityName: String): MutableLiveData<ForecastWeatherData>{
+    fun getForecastWeather(cityName: String) {
         _state.value = NetworkState.Loading
         weatherRepositoryImp.getForecastData(token = WeatherApiServiceProvider.API_KEY, city = cityName)
             .subscribeOn(Schedulers.io())
@@ -70,8 +67,6 @@ class WeatherViewModel(private val weatherRepositoryImp: WeatherRepositoryImp) :
 
 //        compositeDisposableForecastLiveData.add(disposableForecastData)
 //        MainActivity.setCompositeDisposableForecast(compositeDisposableForecastLiveData)
-
-        return forecastLiveData
     }
 
     fun getProgressBarCurrentVisible(): LiveData<Boolean> {

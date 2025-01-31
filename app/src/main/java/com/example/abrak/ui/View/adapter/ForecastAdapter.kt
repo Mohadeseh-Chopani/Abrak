@@ -10,14 +10,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.abrak.network.api.weatherAPI.WeatherApiServiceProvider
 import com.example.abrak.data.models.WeatherData
 import com.example.abrak.R
+import com.example.abrak.databinding.CardItemBinding
 import com.squareup.picasso.Picasso
 
 class ForecastAdapter(listData: List<WeatherData>) : RecyclerView.Adapter<ForecastAdapter.ForecastViewHolder>() {
 
     var list: List<WeatherData> = listData
+    private lateinit var binding: CardItemBinding
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ForecastViewHolder {
-        return ForecastViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.card_item, parent, false))
+        binding = CardItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ForecastViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ForecastViewHolder, position: Int) {
@@ -29,24 +32,20 @@ class ForecastAdapter(listData: List<WeatherData>) : RecyclerView.Adapter<Foreca
         return list.size
     }
 
-    class ForecastViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var timeTxt: TextView = itemView.findViewById(R.id.time_forecast)
-        var airGrade: TextView = itemView.findViewById(R.id.air_grade_forecast)
-        var img: ImageView = itemView.findViewById(R.id.img_forecast)
-        var windSpeed: TextView = itemView.findViewById(R.id.wind_speed_forecast)
+    class ForecastViewHolder(private val binding: CardItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(items: WeatherData) {
             val date: List<String> = items.dt_txt.toString().split(" ")
-            timeTxt.setText(date.get(1))
+            binding.timeForecast.setText(date.get(1))
             val temperature: Int = items.main.temp.toInt()
-            airGrade.setText(temperature.toString() + " C°")
+            binding.airGradeForecast.setText(temperature.toString() + " C°")
             Picasso.get()
                 .load(
                     WeatherApiServiceProvider.BASE_URL + "?token=" + WeatherApiServiceProvider.API_KEY + "&action=icon&id=" +
                             items.weather.get(0).icon
                 )
-                .into(img)
-            windSpeed.setText(items.wind.speed.toString() + "Km/H")
+                .into(binding.imgForecast)
+            binding.windSpeedForecast.setText(items.wind.speed.toString() + "Km/H")
         }
     }
 }

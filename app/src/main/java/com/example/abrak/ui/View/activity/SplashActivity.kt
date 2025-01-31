@@ -13,30 +13,27 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.abrak.R
+import com.example.abrak.databinding.ActivitySplashBinding
 
 class SplashActivity : AppCompatActivity() {
-    lateinit var logoHolder: LinearLayout
-    lateinit var version: TextView
+    private lateinit var binding: ActivitySplashBinding
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_splash)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.splash)) { v, insets ->
+        binding = ActivitySplashBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.splash) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        logoHolder = findViewById(R.id.logoHolder)
-        version = findViewById(R.id.app_version)
-
-
         val packageInfo: PackageInfo = packageManager.getPackageInfo(packageName, 0)
-        version.setText(packageInfo.versionName)
+        binding.appVersion.setText(packageInfo.versionName)
 
-        val anim = ObjectAnimator.ofFloat(logoHolder, "translationY", -1000f, 0f)
+        val anim = ObjectAnimator.ofFloat(binding.logoHolder, "translationY", -1000f, 0f)
         anim.setDuration(2000)
         anim.start()
 

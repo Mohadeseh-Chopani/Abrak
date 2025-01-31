@@ -4,22 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.lifecycle.MutableLiveData
-import com.example.abrak.R
 import com.example.abrak.data.models.PrayerTimeData
 import com.example.abrak.databinding.FragmentBottomSheetBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.Locale
-
 
 
 class PrayerTimeFragment(val prayerTimeData: MutableLiveData<PrayerTimeData>) : BottomSheetDialogFragment() {
 
-    var textDhuhr: TextView? = null
     private lateinit var binding: FragmentBottomSheetBinding
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,17 +27,16 @@ class PrayerTimeFragment(val prayerTimeData: MutableLiveData<PrayerTimeData>) : 
             binding.dataShamsi.text = "1403"
             binding.monthShamsi.text = result?.month
             binding.dayShamsi.text = result?.day
-            binding.fajrTime.text =  result?.azan_sobh
-            textDhuhr?.text = result?.azan_zohre.toString()
-            binding.dhuhrTime.text =  result?.azan_zohre
-            binding.maghribTime.text =  result?.azan_maghreb
-            binding.sunsetTime.text =  result?.ghorob_aftab
-            binding.sunriseTime.text =  result?.toloe_aftab
-            binding.midnightTime.text =  result?.nime_shabe_sharie
-            binding.dataMiladi.text =  miladiData(0)
-            binding.monthMiladi.text =  miladiData(1)
-            binding.dayMiladi.text =  miladiData(2)
-        } ?: run{
+            binding.fajrTime.text = result?.azan_sobh
+            binding.dhuhrTime.text = result?.azan_zohre
+            binding.maghribTime.text = result?.azan_maghreb
+            binding.sunsetTime.text = result?.ghorob_aftab
+            binding.sunriseTime.text = result?.toloe_aftab
+            binding.midnightTime.text = result?.nime_shabe_sharie
+            binding.dataMiladi.text = miladiData(0)
+            binding.monthMiladi.text = miladiData(1)
+            binding.dayMiladi.text = miladiData(2)
+        } ?: run {
 
         }
 
@@ -56,8 +49,6 @@ class PrayerTimeFragment(val prayerTimeData: MutableLiveData<PrayerTimeData>) : 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        textDhuhr = view.findViewById(R.id.dhuhr_time)
 
     }
 

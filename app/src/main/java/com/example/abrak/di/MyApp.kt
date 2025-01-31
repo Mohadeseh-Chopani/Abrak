@@ -41,7 +41,6 @@ class MyApp: Application() {
 
 
         startKoin {
-            // Log Koin into Android logger
             androidLogger()
             androidContext(this@MyApp)
             modules(listOf(myModules))

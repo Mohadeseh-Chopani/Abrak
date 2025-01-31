@@ -29,7 +29,6 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
-import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -256,12 +255,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        compositeCurrentData?.clear()
-        compositeForecastData?.clear()
-        super.onDestroy()
-    }
-
     private fun showProgressBarCurrent(status: Boolean) {
         if (status)
             binding.loading.visibility = View.VISIBLE
@@ -279,18 +272,5 @@ class MainActivity : AppCompatActivity() {
 
     private fun showError(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-    }
-
-    companion object {
-        var compositeCurrentData: CompositeDisposable? = null
-        var compositeForecastData: CompositeDisposable? = null
-
-        fun setCompositeDisposableCurrent(compositeDisposable: CompositeDisposable) {
-            compositeCurrentData = compositeDisposable
-        }
-
-        fun setCompositeDisposableForecast(compositeDisposable: CompositeDisposable) {
-            compositeForecastData = compositeDisposable
-        }
     }
 }

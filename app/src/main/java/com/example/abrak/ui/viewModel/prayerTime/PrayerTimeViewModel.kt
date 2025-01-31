@@ -30,4 +30,9 @@ class PrayerTimeViewModel(private val prayerTimeRepositoryImp: PrayerTimeReposit
                 Log.d("XMOH", "PrayerTimeData: error" + throwable.message)
             })
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        prayerTimeRepositoryImp.clearDisposable()
+    }
 }

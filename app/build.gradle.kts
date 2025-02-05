@@ -42,6 +42,15 @@ android {
     viewBinding{
         enable = true
     }
+
+    buildFeatures {
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.4.0"
+        kotlinCompilerVersion = "1.8.0"
+    }
 }
 
 dependencies {
@@ -67,7 +76,12 @@ dependencies {
     implementation(libs.rxjava.retrofit.adapter)
     implementation(libs.koin.core)
     implementation(libs.koin.android)
-//    implementation(libs.koin.bom)
+
+    implementation(libs.compose.ui)
+    implementation(libs.compose.material)
+    implementation(libs.compose.ui.preview)
+    implementation(libs.activity.compose)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

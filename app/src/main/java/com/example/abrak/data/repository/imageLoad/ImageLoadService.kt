@@ -1,4 +1,4 @@
-package com.example.abrak.data.repository
+package com.example.abrak.data.repository.imageLoad
 
 import android.widget.ImageView
 

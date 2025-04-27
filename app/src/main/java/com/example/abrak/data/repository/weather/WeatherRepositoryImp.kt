@@ -1,13 +1,14 @@
-package com.example.abrak.data.repository
+package com.example.abrak.data.repository.weather
 
 import android.util.Log
 import com.example.abrak.data.models.CurrentWeatherData
-import com.example.abrak.data.dataSource.remote.WeatherRemoteDataSourceImp
+import com.example.abrak.data.dataSource.remote.weather.WeatherRemoteDataSourceImp
 import com.example.abrak.data.models.ForecastWeatherData
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 
-class WeatherRepositoryImp(private val weatherRemoteDataSourceImp: WeatherRemoteDataSourceImp) : WeatherRepository {
+class WeatherRepositoryImp(private val weatherRemoteDataSourceImp: WeatherRemoteDataSourceImp) :
+    WeatherRepository {
     private var currentCompositeDisposable: CompositeDisposable? = null
     private var forecastCompositeDisposable: CompositeDisposable? = null
     override fun getCurrentData(token: String, city: String): Single<CurrentWeatherData> {

@@ -9,58 +9,49 @@ import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.*
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.abrak.network.api.ApiServiceProvider
+import com.example.abrak.data.models.PrayerTimeData
 import com.example.abrak.data.models.WeatherData
-import com.example.abrak.R
-import com.example.abrak.data.models.ForecastWeatherData
-import com.example.abrak.data.repository.ImageLoadServiceImp
+import com.example.abrak.data.repository.imageLoad.ImageLoadServiceImp
+import com.example.abrak.databinding.ActivityMainBinding
+import com.example.abrak.network.api.weatherAPI.WeatherApiServiceProvider
 import com.example.abrak.ui.View.adapter.ForecastAdapter
-import com.example.abrak.ui.viewModel.WeatherViewModel
-import com.example.abrak.ui.viewModel.WeatherViewModelFactory
+import com.example.abrak.ui.View.bottomNavigation.PrayerTimeFragment
+import com.example.abrak.ui.viewModel.prayerTime.PrayerTimeViewModel
+import com.example.abrak.ui.viewModel.weather.WeatherViewModel
 import com.example.abrak.utils.NetworkState
-import com.google.android.gms.location.*
-import com.squareup.picasso.Picasso
-import io.reactivex.rxjava3.disposables.CompositeDisposable
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.getKoin
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.IOException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var currentTemperature: TextView
-    private lateinit var currentIcon: ImageView
-    private lateinit var btnSearch: ImageView
-    private lateinit var currentDescription: TextView
-    private lateinit var countryName: TextView
-    private lateinit var currentTime: TextView
     private lateinit var forecastAdapter: ForecastAdapter
-    private lateinit var recyclerViewForecast: RecyclerView
-    private lateinit var searchEditText: EditText
-    private lateinit var loading: LinearLayout
-    private lateinit var progressBarForecast: ProgressBar
-    private lateinit var searchNotFoundLayout: View
-    private lateinit var itemHolder: View
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationRequest: LocationRequest
-//    private val weatherViewModel: WeatherViewModel by viewModel()
+    private var PrayerTimeLiveData: MutableLiveData<PrayerTimeData> = MutableLiveData()
     private var cityName: String? = null
 
+    private lateinit var binding: ActivityMainBinding
     private val imageLoad: ImageLoadServiceImp by inject()
     private val weatherViewModel: WeatherViewModel by viewModel()
+    private val prayerTimeViewModel: PrayerTimeViewModel by viewModel()
 
     private val locationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -78,16 +69,18 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        initializeViews()
-        initializeWeatherViewModel()
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         setupLocationRequest()
 
-        btnSearch.setOnClickListener {
-            cityName = searchEditText.text.toString()
+        fetchWeatherByCity("تهران")
+        fetchPrayerTimeByCity("تهران")
+        checkLocationPermissions()
+
+        binding.searchBtn.setOnClickListener {
+            cityName = binding.searchEditText.text.toString()
             if (!cityName.isNullOrBlank()) {
                 fetchWeatherByCity(cityName!!)
             } else {
@@ -95,34 +88,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        fetchWeatherByCity("تهران")
-
-        checkLocationPermissions()
+        binding.btnPrayer.setOnClickListener {
+            val bottomSheet = PrayerTimeFragment(PrayerTimeLiveData)
+            bottomSheet.show(supportFragmentManager, "MyBottomSheetFragment")
+        }
     }
-
-    private fun initializeViews() {
-        currentTemperature = findViewById(R.id.current_temperature)
-        currentIcon = findViewById(R.id.current_icon)
-        currentDescription = findViewById(R.id.current_description)
-        currentTime = findViewById(R.id.current_time)
-        countryName = findViewById(R.id.country_name)
-        btnSearch = findViewById(R.id.searchBtn)
-        searchEditText = findViewById(R.id.search_edit_text)
-        recyclerViewForecast = findViewById(R.id.recyclerview_forecast)
-        loading = findViewById(R.id.loading)
-        searchNotFoundLayout = findViewById(R.id.search_not_found)
-        itemHolder = findViewById(R.id.item_holder)
-        progressBarForecast = findViewById(R.id.progressBar_forecast)
-    }
-
-    private fun initializeWeatherViewModel() {
-//        weatherViewModel = ViewModelProvider(
-//            this,
-//            WeatherViewModelFactory(ApiServiceProvider.getApiService())
-//        ).get(WeatherViewModel::class.java)
-//        val weatherViewModel: WeatherViewModel by inject()
-    }
-
 
     private fun setupLocationRequest() {
         locationRequest = LocationRequest.Builder(
@@ -184,6 +154,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun fetchPrayerTimeByCity(city: String) {
+        prayerTimeViewModel.getPrayerTime(city)
+        prayerTimeViewModel.CurrentTime.observe(this) { state ->
+            when (state) {
+                is NetworkState.Loading -> {}
+                is NetworkState.Success -> {
+                    val data = state.data
+                    PrayerTimeLiveData.value = data
+                }
+
+                is NetworkState.Error -> {}
+            }
+        }
+    }
+
     private fun fetchWeatherByCity(city: String) {
         weatherViewModel.getCurrentWeather(cityName = city)
         weatherViewModel.CurrentState.observe(this) { state ->
@@ -191,30 +176,37 @@ class MainActivity : AppCompatActivity() {
                 is NetworkState.Loading -> {
                     showProgressBarCurrent(true)
                 }
+
                 is NetworkState.Success -> {
                     showProgressBarCurrent(false)
                     val data = state.data.result
                     data?.let { result ->
-                        itemHolder.visibility = View.VISIBLE
-                        searchNotFoundLayout.visibility = View.GONE
-                        currentTemperature.text = "${result.main.temp.toInt()} °C"
-                        currentDescription.text = result.weather.get(0).description
-                        countryName.text = "${result.sys.country} / $city"
-                        currentTime.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
+                        binding.itemHolder.visibility = View.VISIBLE
+                        binding.searchNotFound.visibility = View.GONE
+                        binding.currentTemperature.text = "${result.main.temp.toInt()} °C"
+                        binding.currentDescription.text = result.weather.get(0).description
+                        binding.countryName.text = "${result.sys.country} / $city"
+                        binding.currentTime.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
 
-                        imageLoad.loadImage(currentIcon,
-                            "${ApiServiceProvider.BASE_URL}?token=${ApiServiceProvider.API_KEY}&action=icon&id=${result.weather.get(0).icon}"
+                        imageLoad.loadImage(
+                            binding.currentIcon,
+                            "${WeatherApiServiceProvider.BASE_URL}?token=${WeatherApiServiceProvider.API_KEY}&action=icon&id=${
+                                result.weather.get(
+                                    0
+                                ).icon
+                            }"
                         )
 
                         weatherViewModel.getProgressBarCurrentVisible().observe(this, { status ->
                             showProgressBarCurrent(status)
                         })
                     } ?: run {
-                        itemHolder.visibility = View.GONE
-                        searchNotFoundLayout.visibility = View.VISIBLE
+                        binding.itemHolder.visibility = View.GONE
+                        binding.searchNotFound.visibility = View.VISIBLE
                         showError("شهر مورد نظر یافت نشد")
                     }
                 }
+
                 is NetworkState.Error -> {
                     showProgressBarCurrent(false)
                     //showError message
@@ -233,26 +225,28 @@ class MainActivity : AppCompatActivity() {
                 is NetworkState.Loading -> {
                     showProgressBarForecast(true)
                 }
+
                 is NetworkState.Success -> {
                     showProgressBarForecast(false)
                     val data = state?.data?.result?.list
                     val result: MutableList<WeatherData> = ArrayList()
                     Log.i("requestTime", "fetchWeatherByCity: ")
-                    data?.forEach{ weatherItem ->
-                            val date: List<String> = weatherItem.dt_txt.split(" ")
-                            if (date[0] == todayTime)
-                                result.add(weatherItem)
+                    data?.forEach { weatherItem ->
+                        val date: List<String> = weatherItem.dt_txt.split(" ")
+                        if (date[0] == todayTime)
+                            result.add(weatherItem)
 
                         forecastAdapter = ForecastAdapter(result)
-                        recyclerViewForecast.layoutManager =
+                        binding.recyclerviewForecast.layoutManager =
                             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-                        recyclerViewForecast.adapter = forecastAdapter
+                        binding.recyclerviewForecast.adapter = forecastAdapter
 
                         weatherViewModel.getProgressBarForecastVisible().observe(this) { status ->
                             showProgressBarForecast(status)
                         }
                     }
                 }
+
                 is NetworkState.Error -> {
                     showProgressBarForecast(false)
                     // Show error message
@@ -261,41 +255,22 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        compositeCurrentData?.clear()
-        compositeForecastData?.clear()
-        super.onDestroy()
-    }
-
     private fun showProgressBarCurrent(status: Boolean) {
         if (status)
-            loading.visibility = View.VISIBLE
+            binding.loading.visibility = View.VISIBLE
         else
-            loading.visibility = View.GONE
+            binding.loading.visibility = View.GONE
     }
 
     private fun showProgressBarForecast(status: Boolean) {
         if (status)
-            progressBarForecast.visibility = View.VISIBLE
+            binding.progressBarForecast.visibility = View.VISIBLE
         else
-            progressBarForecast.visibility = View.GONE
+            binding.progressBarForecast.visibility = View.GONE
     }
 
 
     private fun showError(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-    }
-
-    companion object {
-        var compositeCurrentData: CompositeDisposable? = null
-        var compositeForecastData: CompositeDisposable? = null
-
-        fun setCompositeDisposableCurrent(compositeDisposable: CompositeDisposable) {
-            compositeCurrentData = compositeDisposable
-        }
-
-        fun setCompositeDisposableForecast(compositeDisposable: CompositeDisposable) {
-            compositeForecastData = compositeDisposable
-        }
     }
 }

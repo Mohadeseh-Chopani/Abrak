@@ -1,11 +1,15 @@
 package com.example.abrak.di
 
 import android.app.Application
-import com.example.abrak.data.dataSource.remote.WeatherRemoteDataSourceImp
-import com.example.abrak.data.repository.ImageLoadServiceImp
-import com.example.abrak.data.repository.WeatherRepositoryImp
-import com.example.abrak.network.api.ApiServiceProvider
-import com.example.abrak.ui.viewModel.WeatherViewModel
+import com.example.abrak.data.dataSource.remote.prayerTime.PrayerTimeRemoteDataSourceImp
+import com.example.abrak.data.dataSource.remote.weather.WeatherRemoteDataSourceImp
+import com.example.abrak.data.repository.imageLoad.ImageLoadServiceImp
+import com.example.abrak.data.repository.prayerTime.PrayerTimeRepositoryImp
+import com.example.abrak.data.repository.weather.WeatherRepositoryImp
+import com.example.abrak.network.api.prayerTimeAPI.PrayerTimeApiServiceProvider
+import com.example.abrak.network.api.weatherAPI.WeatherApiServiceProvider
+import com.example.abrak.ui.viewModel.prayerTime.PrayerTimeViewModel
+import com.example.abrak.ui.viewModel.weather.WeatherViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.viewmodel.dsl.viewModelOf
@@ -21,21 +25,22 @@ class MyApp: Application() {
         super.onCreate()
 
         val myModules = module {
-            singleOf(ApiServiceProvider::getApiService)
+            singleOf(WeatherApiServiceProvider::getApiService)
+            singleOf(PrayerTimeApiServiceProvider::getApiService)
+
             singleOf(::ImageLoadServiceImp)
-            // Define RemoteDataSource
+
             factoryOf(::WeatherRemoteDataSourceImp)
-
-            // Define Repository
             factoryOf(::WeatherRepositoryImp)
-
-            // Define ViewModel
             viewModelOf(::WeatherViewModel)
+
+            factoryOf(::PrayerTimeRemoteDataSourceImp)
+            factoryOf(::PrayerTimeRepositoryImp)
+            viewModelOf(::PrayerTimeViewModel)
         }
 
 
         startKoin {
-            // Log Koin into Android logger
             androidLogger()
             androidContext(this@MyApp)
             modules(listOf(myModules))

@@ -1,24 +1,20 @@
-package com.example.abrak.ui.viewModel
+package com.example.abrak.ui.viewModel.weather
 
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.abrak.network.api.ApiServiceProvider
+import com.example.abrak.network.api.weatherAPI.WeatherApiServiceProvider
 import com.example.abrak.data.models.CurrentWeatherData
 import com.example.abrak.data.models.ForecastWeatherData
-import com.example.abrak.data.repository.WeatherRepositoryImp
-import com.example.abrak.ui.View.activity.MainActivity
+import com.example.abrak.data.repository.weather.WeatherRepositoryImp
 import com.example.abrak.utils.NetworkState
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 class WeatherViewModel(private val weatherRepositoryImp: WeatherRepositoryImp) : ViewModel() {
 
-    private var currentLiveData: MutableLiveData<CurrentWeatherData> = MutableLiveData()
-    private var forecastLiveData: MutableLiveData<ForecastWeatherData> = MutableLiveData()
     private val progressBarLiveData = MutableLiveData<Boolean>()
     private val progressBarForecastLiveData = MutableLiveData<Boolean>()
 
@@ -30,9 +26,9 @@ class WeatherViewModel(private val weatherRepositoryImp: WeatherRepositoryImp) :
     val CurrentState: LiveData<NetworkState<CurrentWeatherData>> get() = _CurrentState
 
     @SuppressLint("CheckResult")
-    fun getCurrentWeather(cityName: String): MutableLiveData<CurrentWeatherData> {
+    fun getCurrentWeather(cityName: String) {
         _CurrentState.value = NetworkState.Loading
-        weatherRepositoryImp.getCurrentData(ApiServiceProvider.API_KEY, cityName)
+        weatherRepositoryImp.getCurrentData(WeatherApiServiceProvider.API_KEY, cityName)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ response ->
@@ -46,7 +42,6 @@ class WeatherViewModel(private val weatherRepositoryImp: WeatherRepositoryImp) :
 
 //        compositeDisposableCurrentData.add(disposableCurrentData)
 //        MainActivity.setCompositeDisposableCurrent(compositeDisposableCurrentData)
-        return currentLiveData
     }
 
 
@@ -54,9 +49,9 @@ class WeatherViewModel(private val weatherRepositoryImp: WeatherRepositoryImp) :
     val state: LiveData<NetworkState<ForecastWeatherData>> get() = _state
 
     @SuppressLint("CheckResult")
-    fun getForecastWeather(cityName: String): MutableLiveData<ForecastWeatherData>{
+    fun getForecastWeather(cityName: String) {
         _state.value = NetworkState.Loading
-        weatherRepositoryImp.getForecastData(token = ApiServiceProvider.API_KEY, city = cityName)
+        weatherRepositoryImp.getForecastData(token = WeatherApiServiceProvider.API_KEY, city = cityName)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
@@ -72,8 +67,6 @@ class WeatherViewModel(private val weatherRepositoryImp: WeatherRepositoryImp) :
 
 //        compositeDisposableForecastLiveData.add(disposableForecastData)
 //        MainActivity.setCompositeDisposableForecast(compositeDisposableForecastLiveData)
-
-        return forecastLiveData
     }
 
     fun getProgressBarCurrentVisible(): LiveData<Boolean> {

@@ -1,5 +1,6 @@
-package com.example.abrak.network.api
+package com.example.abrak.network.api.prayerTimeAPI
 
+import com.example.abrak.network.api.weatherAPI.WeatherApiService
 import com.google.gson.GsonBuilder
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
 import okhttp3.OkHttpClient
@@ -8,10 +9,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-class ApiServiceProvider {
-
+class PrayerTimeApiServiceProvider {
     companion object {
-        val BASE_URL = "https://one-api.ir/weather/"
+        val BASE_URL = "https://one-api.ir/owghat/"
 
         // Create a lenient Gson instance
         val gson = GsonBuilder()
@@ -32,7 +32,7 @@ class ApiServiceProvider {
             .build()
 
 
-        fun getApiService(): ApiService {
+        fun getApiService(): PrayerTimeApiService {
             val retrofit: Retrofit = Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
@@ -40,9 +40,9 @@ class ApiServiceProvider {
                 .client(okHttpClient)
                 .build()
 
-            val apiService: ApiService = retrofit.create(ApiService::class.java)
+            val prayerTimeApiService: PrayerTimeApiService = retrofit.create(PrayerTimeApiService::class.java)
 
-            return apiService
+            return prayerTimeApiService
         }
     }
 }
